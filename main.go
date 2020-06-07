@@ -90,7 +90,7 @@ func init() {
 }
 
 func indexHandler(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	c.String(http.StatusOK, "Welcome to goauth API")
 }
 
 func getLoginURL(state string) string {
@@ -142,9 +142,9 @@ func loginHandler(c *gin.Context) {
 func main() {
 	router := gin.Default()
 
-	router.GET("/todoAPI", indexHandler)
-	router.GET("/todoAPI/login", loginHandler)
-	router.GET("/todoAPI/v1/oauth", authHandler)
+	router.GET("/goauth", indexHandler)
+	router.GET("/goauth/login", loginHandler)
+	router.GET("/goauth/v1/oauth", authHandler)
 
 	router.Run(":8080")
 }
