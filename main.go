@@ -75,7 +75,7 @@ func init() {
 	}
 	json.Unmarshal(file, &cred)
 
-	var ru string = os.Getenv("URL") + "v1/oauth"
+	var ru string = os.Getenv("URL") + "v1/oauth?type=google"
 
 	conf = &oauth2.Config{
 		ClientID:     cred.Cid,
@@ -98,6 +98,20 @@ func getLoginURL(state string) string {
 }
 
 func authHandler(c *gin.Context) {
+	p := c.Request.URL.Query()
+	types := p["type"]
+	if types == nil || len(types) <= 0 || len(types[0]) <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "missing auth type"})
+		return
+	}
+
+	authType := types[0]
+
+	if authType != "google" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Not valid auth type"})
+		return
+	}
+
 	tok, err := conf.Exchange(oauth2.NoContext, c.Query("code"))
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
